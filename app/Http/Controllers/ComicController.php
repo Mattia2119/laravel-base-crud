@@ -48,7 +48,7 @@ class ComicController extends Controller
 
         $newComic->save();
 
-        return redirect()->route('comics.show', ['comic' => $newComic->id]);
+        return redirect()->route('comics.show', ['comic' => $newComic->id])->with('status', 'Fumetto aggiunto!');
     }
 
     /**
@@ -77,7 +77,13 @@ class ComicController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comic = Comics::find($id);
+
+        if ($comic) {
+            return view('comic.edit', compact('comic'));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -87,9 +93,17 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comics $comic)
     {
-        //
+        $data = $request->all();
+
+        $comic->title = $data['title'];
+        $comic->price = $data['price'];
+        $comic->series = $data['series'];
+        
+        $comic->save();
+
+        return redirect()->route('pasta.show',['comic' => $comic->id]);
     }
 
     /**
@@ -98,8 +112,10 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comics $comic)
     {
-        //
+        $comic->delete();
+
+        return redirect()->route('comics.index')->with('status', 'Fumetto cancellato!');
     }
 }

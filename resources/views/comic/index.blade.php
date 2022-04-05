@@ -29,6 +29,15 @@
           <td>{{$comic->price}}</td>
           <td>{{$comic->series}}</td>
           <td> <a class="btn btn-primary" href="{{route('comics.show', $comic->id)}}" role="button">Vedi</a></td>
+          <td> <a class="btn btn-primary" href="{{route('comics.edit', $comic->id)}}" role="button">Modifica</a></td>
+
+          <td class="d-flex">
+            <form method="POST" action={{route("comics.destroy", ['comic' => $comic->id])}} >
+               @csrf
+               @method('DELETE')
+               <button type="sumbit" class="btn btn-danger">Elimina</button>
+            </form>
+          </td>
         </tr>
       @endforeach
       
